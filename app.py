@@ -3,15 +3,7 @@
 # Full City Coverage Edition
 # =====================================================
 
-# -----------------------
-# ENV VARIABLES
-# -----------------------
 
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 # -----------------------
 # IMPORTS
@@ -23,6 +15,9 @@ import pandas as pd
 from datetime import datetime
 import plotly.express as px
 import random
+
+# Load API key from Streamlit secrets
+API_KEY = st.secrets("OPENWEATHER_API_KEY")
 
 import streamlit as st
 import time
