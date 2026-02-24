@@ -23,8 +23,17 @@ import pandas as pd
 from datetime import datetime
 import plotly.express as px
 import random
-from streamlit_autorefresh import st_autorefresh
 
+import streamlit as st
+import time
+
+# Auto refresh every 5 minutes
+if "last_refresh" not in st.session_state:
+    st.session_state.last_refresh = time.time()
+
+if time.time() - st.session_state.last_refresh > 300:
+    st.session_state.last_refresh = time.time()
+    st.rerun()
 # -----------------------
 # TRAIN MODEL ON STARTUP
 # -----------------------
@@ -81,8 +90,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# Auto refresh every 5 minutes
-st_autorefresh(interval=300000, key="traffic_refresh")
 
 st.title("🚦 Ahmedabad Smart Traffic Prediction System")
 

@@ -1,9 +1,7 @@
-streamlit
-pandas
-requests
-joblib
-scikit-learn
-plotly
-python-dotenv
-streamlit-autofresh
-numpy
+streamlit==1.32.3
+pandas==2.2.1
+requests==2.31.0
+scikit-learn==1.4.1 .post
+plotly==5.19.0
+python-dotenv==1.0.1
+numpy==1.26.4
