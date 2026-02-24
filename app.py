@@ -17,7 +17,7 @@ import plotly.express as px
 import random
 
 # Load API key from Streamlit secrets
-API_KEY = st.secrets("OPENWEATHER_API_KEY")
+API_KEY = st.secrets["OPENWEATHER_API_KEY"]
 
 import streamlit as st
 import time
