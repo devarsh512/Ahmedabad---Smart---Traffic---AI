@@ -12,9 +12,11 @@
 import streamlit as st
 import requests
 import pandas as pd
+import pytz
 from datetime import datetime
 import plotly.express as px
 import random
+
 
 # Load API key from Streamlit secrets
 API_KEY = st.secrets["OPENWEATHER_API_KEY"]
@@ -119,7 +121,8 @@ def predict_live():
         return None
 
     temp, rain, snow, clouds = weather
-    now = datetime.now()
+    india = pytz.timezone("Asia/Kolkata")
+    now = datetime.now(india)
 
     input_data = pd.DataFrame([{
         'temp': temp,
@@ -222,7 +225,10 @@ if result is not None:
     col1, col2, col3 = st.columns(3)
     col1.metric("🌡 Temperature", f"{temp} °C")
     col2.metric("📍 Total Zones", len(zones))
-    col3.metric("⏱ Updated", datetime.now().strftime("%H:%M:%S"))
+    
+    india = pytz.timezone("Asia/Kolkata")
+    now = datetime.now(india)
+    col3.metric("⏱ Updated", now.strftime("%H:%M:%S IST"))
 
     st.write("")
 
