@@ -53,6 +53,10 @@ def train_model():
         labels=["Low", "Medium", "High"]
     )
 
+    #Remove rows with missing values
+    df = df.dropna()
+
+
     features = [
         "temp",
         "rain_1h",
