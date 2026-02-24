@@ -19,12 +19,58 @@ API_KEY = os.getenv("OPENWEATHER_API_KEY")
 
 import streamlit as st
 import requests
-import joblib
 import pandas as pd
 from datetime import datetime
 import plotly.express as px
 import random
 from streamlit_autorefresh import st_autorefresh
+
+# -----------------------
+# TRAIN MODEL ON STARTUP
+# -----------------------
+
+@st.cache_resource
+def train_model():
+    df = pd.read_csv("data/Metro_Interstate_Traffic_Volume.csv")
+
+    # Convert date_time
+    df["date_time"] = pd.to_datetime(df["date_time"])
+
+    # Feature engineering
+    df["hour"] = df["date_time"].dt.hour
+    df["day_of_week"] = df["date_time"].dt.weekday
+    df["month"] = df["date_time"].dt.month
+    df["is_weekend"] = df["day_of_week"].isin([5,6]).astype(int)
+
+    # Create congestion categories
+    df["congestion"] = pd.cut(
+        df["traffic_volume"],
+        bins=[0, 2000, 4000, 8000],
+        labels=["Low", "Medium", "High"]
+    )
+
+    features = [
+        "temp",
+        "rain_1h",
+        "snow_1h",
+        "clouds_all",
+        "hour",
+        "day_of_week",
+        "month",
+        "is_weekend"
+    ]
+
+    X = df[features]
+    y = df["congestion"]
+
+    from sklearn.ensemble import RandomForestClassifier
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model.fit(X, y)
+
+    return model
+
+
+model = train_model()
 
 # -----------------------
 # PAGE CONFIG
@@ -40,11 +86,6 @@ st_autorefresh(interval=300000, key="traffic_refresh")
 
 st.title("🚦 Ahmedabad Smart Traffic Prediction System")
 
-# -----------------------
-# LOAD MODEL
-# -----------------------
-
-model = joblib.load("model/traffic_congestion_model.pkl")
 
 # -----------------------
 # WEATHER + PREDICTION
